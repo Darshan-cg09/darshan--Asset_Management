@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres88
+    ports:
+      - "7545:5432"
+    environment:
+      POSTGRES_DB: asset_management
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: backend-asset
+    ports:
+      - "7019:7019"
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: frontend-asset
+    ports:
+      - "7681:80"
+
+  hr:
+    build:
+      context: ./HR
+      dockerfile: Dockerfile
+    container_name: hr-asset
+    ports:
+      - "7682:80"
+
+volumes:
+  pgdata:
+
